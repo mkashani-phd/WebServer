@@ -15,7 +15,7 @@ def check_for_drops(received_seqs, last_checked, highest_seq):
 
 def main():
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.bind((HOST, 23422))
+    sock.bind((HOST, PORT))
 
     print(f"UDP server listening on {HOST}:{PORT}")
 
