@@ -19,7 +19,7 @@ def main():
 
     print(f"UDP server listening on {HOST}:{PORT}")
 
-    seq_list = []
+    
     cnt = 0
     try:
         while True:
@@ -29,6 +29,8 @@ def main():
             cnt += 1
 
             if cnt % 1000 == 0:
+                seq_list = []
+                cnt = 0
                 dropped_packets = check_for_drops(seq_list)
                 print(f"Received {cnt} packets. Dropped packets: {dropped_packets}")
         
