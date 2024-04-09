@@ -16,6 +16,7 @@ def check_for_drops(seq_list):
         if seq_list[i] - seq_list[i - 1] > 1:
             dropped_packets += seq_list[i] - seq_list[i - 1] - 1
             print(i, seq_list[i], seq_list[i - 1])
+            printTofile(f"Packet dropped between {seq_list[i - 1]} and {seq_list[i]}")
     return dropped_packets
 
 def main():
@@ -37,6 +38,7 @@ def main():
             if cnt % 1000 == 0:
                 dropped_packets = check_for_drops(seq_list)
                 print(f"Received {cnt} packets. Dropped packets: {dropped_packets}")
+                printTofile(f"Received {cnt} packets. Dropped packets: {dropped_packets}")
                 seq_list = []
                 cnt = 0
         
