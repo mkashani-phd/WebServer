@@ -21,6 +21,7 @@ def main():
 
     
     cnt = 0
+    seq_list = []
     try:
         while True:
             data, addr = sock.recvfrom(1024)
