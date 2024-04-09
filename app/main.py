@@ -30,13 +30,13 @@ def main():
             seq = int(data.decode('utf-8').split(":")[0])
             received_seqs.add(seq)
 
-            print(f"Received packet with sequence: {seq}")  
+            # print(f"Received packet with sequence: {seq}")  
 
             if seq > highest_seq_received:
                 highest_seq_received = seq
 
             # If we've received a new "batch" of packets, check for drops
-            if len(received_seqs) % 1000 == 0:  # Arbitrary check interval
+            if len(received_seqs) % 100 == 0:  # Arbitrary check interval
                 dropped_packets += check_for_drops(received_seqs, last_checked_seq, highest_seq_received)
                 last_checked_seq = highest_seq_received
 
