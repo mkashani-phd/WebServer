@@ -29,6 +29,9 @@ def main():
             data, addr = sock.recvfrom(1024)
             seq = int(data.decode('utf-8').split(":")[0])
             received_seqs.add(seq)
+
+            print(f"Received packet with sequence: {seq}")  
+
             if seq > highest_seq_received:
                 highest_seq_received = seq
 
