@@ -4,13 +4,13 @@ HOST = socket.gethostbyname(socket.gethostname())  # Standard loopback interface
 PORT = 23423  # Port to listen on (non-privileged ports are > 1023)
 
 
-def check_for_drops(received_seqs, last_checked, highest_seq):
+def check_for_drops(seq_list):
     """Check for dropped packets since the last checked sequence number."""
     dropped_packets = 0
-    for expected_seq in range(last_checked + 1, highest_seq + 1):
-        if expected_seq not in received_seqs:
-            dropped_packets += 1
-            print(f"Packet drop detected. Missing packet with sequence: {expected_seq}")
+    seq_list.sort()
+    for i in range(1, len(seq_list)):
+        if seq_list[i] - seq_list[i - 1] > 1:
+            dropped_packets += seq_list[i] - seq_list[i - 1] - 1
     return dropped_packets
 
 def main():
@@ -19,30 +19,25 @@ def main():
 
     print(f"UDP server listening on {HOST}:{PORT}")
 
-    received_seqs = set()
-    last_checked_seq = 0
-    highest_seq_received = 0
-    dropped_packets = 0
-
+    seq_list = []
+    cnt = 0
     try:
         while True:
             data, addr = sock.recvfrom(1024)
             seq = int(data.decode('utf-8').split(":")[0])
-            received_seqs.add(seq)
+            seq_list.append(seq)
+            cnt += 1
 
-            # print(f"Received packet with sequence: {seq}")  
+            if cnt % 1000 == 0:
+                dropped_packets = check_for_drops(seq_list)
+                print(f"Received {cnt} packets. Dropped packets: {dropped_packets}")
+        
+            
 
-            if seq > highest_seq_received:
-                highest_seq_received = seq
-
-            # If we've received a new "batch" of packets, check for drops
-            if len(received_seqs) % 100 == 0:  # Arbitrary check interval
-                dropped_packets += check_for_drops(received_seqs, last_checked_seq, highest_seq_received)
-                last_checked_seq = highest_seq_received
-
+            
     except KeyboardInterrupt:
         # Final check for any remaining drops
-        dropped_packets += check_for_drops(received_seqs, last_checked_seq, highest_seq_received)
+        dropped_packets = check_for_drops(seq_list)
         print(f"Stopped by user. Total dropped packets: {dropped_packets}")
     finally:
         sock.close()
