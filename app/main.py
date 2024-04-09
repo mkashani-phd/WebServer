@@ -11,6 +11,7 @@ def check_for_drops(seq_list):
     for i in range(1, len(seq_list)):
         if seq_list[i] - seq_list[i - 1] > 1:
             dropped_packets += seq_list[i] - seq_list[i - 1] - 1
+            print(i, seq_list[i], seq_list[i - 1])
     return dropped_packets
 
 def main():
