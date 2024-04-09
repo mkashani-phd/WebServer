@@ -1,8 +1,7 @@
 import socket
-from sortedcontainers import SortedList
 
 HOST = socket.gethostbyname(socket.gethostname())  # Standard loopback interface address (localhost)
-PORT = 23422  # Port to listen on (non-privileged ports are > 1023)
+PORT = 23423  # Port to listen on (non-privileged ports are > 1023)
 
 
 def check_for_drops(received_seqs, last_checked, highest_seq):
@@ -18,7 +17,7 @@ def main():
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.bind((HOST, 23422))
 
-    print(f"UDP server listening on {HOST}:{23422}")
+    print(f"UDP server listening on {HOST}:{PORT}")
 
     received_seqs = set()
     last_checked_seq = 0
@@ -32,8 +31,6 @@ def main():
             received_seqs.add(seq)
             if seq > highest_seq_received:
                 highest_seq_received = seq
-
-            print(f"Received packet: {seq} from {addr}")
 
             # If we've received a new "batch" of packets, check for drops
             if len(received_seqs) % 10 == 0:  # Arbitrary check interval
