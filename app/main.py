@@ -4,6 +4,10 @@ HOST = socket.gethostbyname(socket.gethostname())  # Standard loopback interface
 PORT = 23423  # Port to listen on (non-privileged ports are > 1023)
 
 
+def printTofile(data):
+    with open("output.txt", "a+") as f:
+        f.write(data + "\n")
+
 def check_for_drops(seq_list):
     """Check for dropped packets since the last checked sequence number."""
     dropped_packets = 0
@@ -43,8 +47,11 @@ def main():
         # Final check for any remaining drops
         dropped_packets = check_for_drops(seq_list)
         print(f"Stopped by user. Total dropped packets: {dropped_packets}")
+
     finally:
         sock.close()
 
 if __name__ == "__main__":
     main()
+
+
